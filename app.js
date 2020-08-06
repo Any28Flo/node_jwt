@@ -15,8 +15,9 @@ app.use(cors());
 app.use(bodyParser.json())
 
 const jwtCheck = expressjwt({
-    secret: "mysupersecretkey",
-    algorithms: ['HS256']
+    secret: 'lPJcYOZ3yKwsAtV7GFqoorncJU2R6JCc',
+    audience: 'jwt',
+    issuer: 'https://dev-b98qbs-r.us.auth0.com/'
 });
 
 app.get("/resource" , (req, res) =>{
