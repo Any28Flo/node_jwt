@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser')
+const jwt = require('jsonwebtoken');
 
 const app = express();
 const PORT = 8000 || process.env.PORT
@@ -12,6 +13,7 @@ app.use(bodyParser.json())
 
 app.post("/login" , (req, res) =>{
     const {username, password} = req.body;
+
     if(!username || ! password){
         res
             .status(401)
@@ -27,10 +29,13 @@ app.post("/login" , (req, res) =>{
             .send("User nor found")
         return
     }
-
+    const token = jwt.sign({
+        sub: user.id,
+        username : user.username
+    }, "mysupersecretkey", {expiresIn: "3 hours"})
     res
         .status(200)
-        .send(`User ${user}`)
+        .send({access_token : token})
 })
 app.get("/status" , (req, res) =>{
     const localTime = (new Date()).toLocaleTimeString();
