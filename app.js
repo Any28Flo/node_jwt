@@ -1,7 +1,9 @@
 const express = require('express');
 const bodyParser = require('body-parser')
 const jwt = require('jsonwebtoken');
-const cors = require('cors')
+const cors = require('cors');
+const expressjwt = require("express-jwt");
+
 const app = express();
 const PORT = 8000 || process.env.PORT
 const users = [
@@ -11,6 +13,23 @@ const users = [
 
 app.use(cors());
 app.use(bodyParser.json())
+
+const jwtCheck = expressjwt({
+    secret: "mysupersecretkey",
+    algorithms: ['HS256']
+});
+
+app.get("/resource" , (req, res) =>{
+    res
+        .status(200)
+        .send("Public resouce, you can see this")
+})
+
+app.get("/resouce/secret" , jwtCheck, (req, res) =>{
+    res
+        .status(200)
+        .send("Secret")
+})
 
 app.post("/login" , (req, res) =>{
     const {username, password} = req.body;
