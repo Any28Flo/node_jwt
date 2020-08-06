@@ -3,10 +3,31 @@ const bodyParser = require('body-parser')
 
 const app = express();
 const PORT = 8000 || process.env.PORT
+const users = [
+    { id: 1 , username : "admin" , password: "admin"},
+    { id: 1 , username : "guest" , password: "guest"},
+]
+
 app.use(bodyParser.json())
 
 app.post("/login" , (req, res) =>{
-    const user = req.body.user;
+    const {username, password} = req.body;
+    if(!username || ! password){
+        res
+            .status(401)
+            .send("Some fields are empty")
+        return
+    }
+    const user = users.find( (u) =>{
+        return u.username === username && u.password === password
+    })
+    if(!user){
+        res
+            .status(401)
+            .send("User nor found")
+        return
+    }
+
     res
         .status(200)
         .send(`User ${user}`)
